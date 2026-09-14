@@ -1,0 +1,9 @@
+# Raw WESAD data (~17 GB) — re-fetch via WESAD_dataset/download.py, don't version it
+WESAD_dataset/WESAD/
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+venv/
+.venv/
