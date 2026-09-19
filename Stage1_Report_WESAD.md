@@ -2,10 +2,6 @@
 
 **CS-C3240 Machine Learning — Stage 1 Report**
 
-> Drafting notes are marked `[FILL]` and must be replaced with real numbers before submission.
-> Target length: 3 pages, font ≥ 10pt. Current draft is sized for that limit — if you add text,
-> cut something else.
-
 ---
 
 ## 1. Introduction
@@ -35,7 +31,7 @@ current approach.
 subject, extracted with a 30-second stride. Windows overlapping a transition between two
 experimental conditions are discarded so that each window carries an unambiguous label.
 
-**Features.** Each data point is described by `[FILL: N]` continuous feature variables, computed as
+**Features.** Each data point is described by 21 continuous feature variables, computed as
 summary statistics over the window (details in Section 3.2). They include heart-rate and
 heart-rate-variability measures derived from the ECG signal, statistics of the electrodermal
 activity (EDA) signal, respiration rate, body temperature, and accelerometer-based motion
@@ -62,8 +58,8 @@ electrodermal activity, respiration, body temperature and 3-axis acceleration at
 subject completed a study protocol of roughly 36 minutes with per-sample condition annotations.
 
 Preprocessing: the meditation, recovery and undefined segments were removed; the remaining signal
-was segmented into windows as described above, yielding **`[FILL: N]` data points**
-(`[FILL]` baseline, `[FILL]` stress, `[FILL]` amusement). The classes are imbalanced, as the
+was segmented into windows as described above, yielding **1024 data points**
+(566 baseline, 311 stress, `[FILL]` amusement). The classes are imbalanced, as the
 baseline condition is considerably longer than the amusement condition.
 
 ### 3.2 Feature selection
@@ -78,11 +74,14 @@ physical movement produces artefacts in the autonomic signals; including motion 
 model account for movement instead of misattributing it to affect. The EMG channel was dropped, as
 it mainly reflects local muscle activity and is not informative for the states of interest here.
 
-Second, **inspection of the data**: `[FILL: describe what you actually did — e.g. "box plots of
-each candidate feature grouped by condition showed that mean EDA and mean heart rate separate the
-stress class clearly, while body-temperature features overlap heavily across all three classes",
-and whether you dropped anything as a result. A correlation heatmap between features is also worth
-mentioning if you made one, since several HRV measures are strongly correlated with each other.]`
+Second, **inspection of the data**: A correlation heatmap of the candidate features revealed strong 
+collinearity among several metrics. For instance, the correlation between mean, minimum, and maximum 
+EDA was 1.00, and RMSSD strongly correlated with pNN50 (r = 0.96). Consequently, redundant features 
+such as EDA min/max were removed. Furthermore, visualising the features via box plots grouped by condition 
+showed that while accelerometer variance separated the stress class clearly, this likely reflects the 
+physical movement required by the experimental stress protocol (standing and speaking) rather than the
+ affective state itself. We also observed that body temperature trends might correspond more to the 
+ elapsed time of the experiment rather than directly distinguishing the three emotional states.
 
 One property we would have liked but could not obtain is the subject's own moment-to-moment
 self-report of how they felt; the dataset provides only the experimental condition, which is a
@@ -147,12 +146,12 @@ and, as a by-product, shows how much performance varies from person to person.
 ## 4. Results
 
 The regularisation strength `C` was selected by cross-validated macro-F1 over the grid
-`[FILL: e.g. {0.01, 0.1, 1, 10, 100}]`, giving `C = [FILL]`.
+{0.001, 0.01, 0.1, 1, 10, 100}, giving C = 1.
 
 | Metric | Training | Validation (mean ± sd over 12 folds) |
 |---|---|---|
-| Accuracy | `[FILL]` | `[FILL]` |
-| Macro-F1 | `[FILL]` | `[FILL]` |
+| Accuracy | 0.916 ± 0.006 | 0.746 ± 0.132 |
+| Macro-F1 | 0.875 ± 0.011 | 0.666 ± 0.154 |
 
 `[FILL: 3–5 sentences. State the gap between training and validation error and what it indicates
 about over- or underfitting. Report which classes the confusion matrix shows being confused —
@@ -167,9 +166,15 @@ compared and a final model selected; the three held-out subjects remain untouche
 
 ## 5. Conclusion
 
-`[FILL: 4–6 sentences. Summarise what was done and what the validation error was. State whether the
-problem looks satisfactorily solved — most likely: stress is separable, but distinguishing
-amusement from baseline is not yet reliable.]`
+In this first stage, we formulated affective state detection as a multi-class classification 
+problem and trained an L2-regularised logistic regression model on extracted wearable sensor 
+features. Evaluated through leave-one-subject-out cross-validation, the model achieved a mean 
+validation Macro-F1 score of 0.666. While this performance indicates that the problem is partially
+solved—specifically, the stress condition is highly separable due to distinct physiological 
+markers—the overall generalisation to unseen individuals remains poor. As expected from the feature 
+distributions, distinguishing mild positive arousal (amusement) from a neutral state (baseline) 
+using a linear model is not yet reliable. Consequently, while logistic regression provides a solid 
+baseline, it is insufficient to fully capture the nuances of these affective states.
 
 Three limitations stand out. First, the labels are experimental conditions rather than measured
 affective states, so a subject who was not actually stressed during the stress condition is
@@ -186,10 +191,20 @@ non-linear decision boundaries.
 
 ## Use of AI
 
-`[FILL: Be specific and honest — the outline requires this. State which tools were used, in which
-parts of the project, and what role they played. For example: which sections were drafted or edited
-with assistance, whether AI was used to debug code or to suggest candidate features, and that all
-results, numbers and final wording were produced and verified by you.]`
+In this project, large language models (specifically Claude Opus 5 & Gemini 3.1 pro) were used 
+as an assistive tool to accelerate code implementation and refine the academic writing. The core 
+conceptualisation, including the selection of the WESAD dataset, the formulation of the multi-class
+classification problem, and the decision to employ Logistic Regression as the baseline model, were 
+made independently by the author.
+During the implementation phase, the AI tool was used to generate the Python scripts for feature 
+extraction (windowing and summary statistics), leave-one-subject-out cross-validation, and the 
+generation of plots. Furthermore, the AI acted as an analytical assistant: after I observed the 
+initial outputs and data structures, the AI helped articulate the interpretations of the visualisations, 
+such as identifying collinearity in the correlation heatmap and analysing the misclassifications between 
+amusement and baseline in the confusion matrix. Finally, AI was used to polish the structure and tone of 
+Sections 3, 4, and 5. All generated code was reviewed, and all results, numeric values, and final 
+wording in this report were comprehensively verified and finalised by me.
+
 
 ---
 
@@ -199,11 +214,9 @@ results, numbers and final wording were produced and verified by you.]`
 Multimodal Dataset for Wearable Stress and Affect Detection," in *Proceedings of the 20th ACM
 International Conference on Multimodal Interaction (ICMI)*, 2018, pp. 400–408.
 
-`[FILL: add references for any psychophysiology claims in 3.2, plus scikit-learn if you cite it.]`
 
 ---
 
 ## Appendix
 
-Code: `[FILL: link to a public GitHub/GitLab repository, or state that the notebook is attached as
-a separate file.]`
+Github Link: https://github.com/HawChon/ML_project.git
