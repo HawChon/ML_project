@@ -1,0 +1,39 @@
+{
+  "final_model": "logreg",
+  "params": {
+    "C": 1
+  },
+  "features": [
+    "ecg_hr_mean",
+    "ecg_hr_std",
+    "ecg_sdnn",
+    "ecg_rmssd",
+    "ecg_pnn50",
+    "eda_mean",
+    "eda_std",
+    "eda_slope",
+    "eda_scr_count",
+    "resp_rate",
+    "resp_std",
+    "temp_mean",
+    "temp_std",
+    "temp_slope",
+    "acc_mag_mean",
+    "acc_mag_std",
+    "acc_x_std",
+    "acc_y_std",
+    "acc_z_std"
+  ],
+  "val_f1_mean": 0.6667222229681293,
+  "selection_rule": "simplest model within one paired standard error of the best mean val macro-F1",
+  "top_scoring_model": "svm_rbf",
+  "best_params_per_model": {
+    "logreg": {
+      "C": 1
+    },
+    "svm_rbf": {
+      "C": 1000,
+      "gamma": 0.0003
+    }
+  }
+}

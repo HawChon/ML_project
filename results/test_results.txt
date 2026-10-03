@@ -1,0 +1,33 @@
+Final model: Logistic regression {'C': 1}
+Trained on 834 windows from the 12 development subjects (baseline 453, stress 249, amusement 132)
+Tested on 208 windows from S3, S11, S13 (baseline 113, stress 62, amusement 33)
+
+                        Accuracy  Macro-F1
+Training (12 dev)          0.912     0.869
+Test (3 held out)          0.837     0.730
+Test error (1 - macro-F1): 0.270
+(Mean LOSO validation macro-F1 for comparison: 0.667)
+
+Per test subject:
+          n  accuracy  macro_f1
+subject                        
+S3       68     0.779     0.704
+S11      70     0.929     0.871
+S13      70     0.800     0.567
+
+Per class:
+              precision    recall  f1-score   support
+
+    baseline      0.879     0.965     0.920       113
+      stress      0.753     0.887     0.815        62
+   amusement      0.909     0.303     0.455        33
+
+    accuracy                          0.837       208
+   macro avg      0.847     0.718     0.730       208
+weighted avg      0.846     0.837     0.815       208
+
+Confusion matrix (rows = true, cols = predicted):
+           baseline  stress  amusement
+baseline        109       3          1
+stress            7      55          0
+amusement         8      15         10
